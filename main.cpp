@@ -14,6 +14,7 @@ using namespace::Eigen;
 
 int main()
 {
+	int pl = 0;
 	int N =29;
 	int NN = 2*N;
 
@@ -40,7 +41,7 @@ int main()
 	vector<vector<double> > FLN(N,vectempN);
 	vector<vector<double> > hFLN(N,vectempN);
 	
-	read_FLN(FLN,"FLN.csv");
+//	read_FLN(FLN,"FLN.csv");
 
 	ifstream h_in("ha.csv");
 	double hm = 0.0;
@@ -51,7 +52,8 @@ int main()
 		if(hm<h[i]) hm = h[i];
 	}
 	for(int i=0;i<N;i++) h[i] = 1.+eta*h[i]/hm;
-
+	vector<double> h1(N,1.);
+	h = h1;
 
 	for(int i=0;i<N;i++) {
 		for(int j=0;j<N;j++) {
@@ -99,29 +101,37 @@ int main()
 	vector<vector<double> > evec(NN,tau);
 	// i is the index of the eigenvector/velue
 	// j is the index of the element of eigen vector with index i
-	for(int i=0;i<N;i++) {
-		eval_re[i] = eigenw.eigenvalues()[i].real();
-		tau[i] = -1./eval_re[i];
-		for(int j=0;j<N;j++) {
-			evec[j][N-1-i]= eigenw.eigenvectors()(j,i).real();
-			tau2[N-1-i] = tau[i];
+	if(pl ==1) {
+		for(int i=0;i<N;i++) {
+			eval_re[i] = eigenw.eigenvalues()[i].real();
+			tau[i] = -1./eval_re[i];
+			for(int j=0;j<N;j++) {
+				evec[j][N-1-i]= eigenw.eigenvectors()(j,i).real();
+				tau2[N-1-i] = tau[i];
+			}
 		}
 	}
-//	for(int i=0;i<NN;i++) {
-//		eval_re[i] = eigenw.eigenvalues()[i].real();
-//		tau[i] = -1./eval_re[i];
-//		for(int j=0;j<NN;j++) {
-//			evec[j][i]= eigenw.eigenvectors()(j,i).real();
-//		}
-//	}	
-
+	else{
+		for(int i=0;i<NN;i++) {
+			eval_re[i] = eigenw.eigenvalues()[i].real();
+			tau[i] = -1./eval_re[i];
+			for(int j=0;j<NN;j++) {
+				evec[j][i]= eigenw.eigenvectors()(j,i).real();
+			}
+		}	
+	}
 
 	ofstream W_out("w.csv");
 	write_matrix(W,NN,NN,W_out);
 
-	ofstream evec_out("evec.csv");
-	write_matrix(evec,N,N,evec_out);
-
+	if(pl==0) {
+		ofstream evec_out("evec.csv");
+		write_matrix(evec,NN,NN,evec_out);
+	}	
+	else{
+		ofstream evec_out("evec.csv");
+		write_matrix(evec,N,N,evec_out);
+	}
 	ofstream eval_re_out("eval.csv");
 	write_matrix(eval_re,NN,eval_re_out);
 

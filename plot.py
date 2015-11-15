@@ -14,7 +14,11 @@ evec = np.absolute(np.genfromtxt("evec.csv", delimiter=';'))
 tau = np.genfromtxt("tau.csv",delimiter=';')
 tau2 = np.genfromtxt("tau2.csv",delimiter=';')
 
-
+count = 0
+for t in tau:
+	print count , '\t',t
+	count +=1
+exit(0)
 
 #for i in range(len(tau)):
 #	plt.scatter(i,tau[i])
