@@ -41,7 +41,7 @@ int main()
 	vector<vector<double> > FLN(N,vectempN);
 	vector<vector<double> > hFLN(N,vectempN);
 	
-//	read_FLN(FLN,"FLN.csv");
+	read_FLN(FLN,"FLN.csv");
 
 	ifstream h_in("ha.csv");
 	double hm = 0.0;
@@ -94,6 +94,7 @@ int main()
 
 	// vector with real part of the eigenvalues
 	vector<double> eval_re(NN,0.0);
+	vector<double> eval_im(NN,0.0);
 	// vector with time scales = -1/Re(eigenvalue)
 	vector<double> tau(NN,0.0);
 	vector<double> tau2(NN,0.0);
@@ -104,6 +105,7 @@ int main()
 	if(pl ==1) {
 		for(int i=0;i<N;i++) {
 			eval_re[i] = eigenw.eigenvalues()[i].real();
+			eval_im[i] = eigenw.eigenvalues()[i].imag();
 			tau[i] = -1./eval_re[i];
 			for(int j=0;j<N;j++) {
 				evec[j][N-1-i]= eigenw.eigenvectors()(j,i).real();
@@ -114,6 +116,7 @@ int main()
 	else{
 		for(int i=0;i<NN;i++) {
 			eval_re[i] = eigenw.eigenvalues()[i].real();
+			eval_im[i] = eigenw.eigenvalues()[i].imag();
 			tau[i] = -1./eval_re[i];
 			for(int j=0;j<NN;j++) {
 				evec[j][i]= eigenw.eigenvectors()(j,i).real();
@@ -134,6 +137,9 @@ int main()
 	}
 	ofstream eval_re_out("eval.csv");
 	write_matrix(eval_re,NN,eval_re_out);
+
+	ofstream eval_im_out("eval_imag.csv");
+	write_matrix(eval_im,NN,eval_im_out);
 
 	ofstream tau_out("tau.csv");
 	write_matrix(tau,NN,tau_out);
