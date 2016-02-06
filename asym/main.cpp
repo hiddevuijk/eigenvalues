@@ -34,9 +34,8 @@ int main()
 	MatrixXcf w(N,N);
 	for(int i=0;i<N;++i){
 		for( int j=0;j<i;++j) {
-			double a = bm_transform(r);
+			double a = mean + sqrt(1.*var/N)*bm_transform(r);
 			w(i,j) = a;
-			w(j,i) = -1.*a;
 		}
 	}
 
